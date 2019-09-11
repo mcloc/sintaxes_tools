@@ -46,7 +46,7 @@ $port = 80;
 
 
 /* Create a TCP/IP socket. */
-/*$socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+$socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 if ($socket === false) {
     echo "socket_create() failed: reason: " . socket_strerror(socket_last_error()) . "\n";
 } else {
@@ -159,7 +159,7 @@ $foo = NULL;
 //    echo $foo;
 //}
 //print_r($packed);
-/*
+
 echo "Sending HTTP HEAD request...";
 //socket_write($socket, $msg, strlen($msg)); //json
 socket_write($socket, $packed, strlen($packed)); //msgpag
@@ -171,5 +171,5 @@ while ($out = socket_read($socket, 2048)) {
 
 echo "\nClosing socket...\n";
 socket_close($socket);
-*/
+
 ?>

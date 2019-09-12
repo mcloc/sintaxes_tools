@@ -3,6 +3,8 @@ require __DIR__ . '/vendor/autoload.php';
 use MessagePack\MessagePack;
 use MessagePack\Packer;
 use MessagePack\PackOptions;
+use MessagePack\Type\Binary;
+use MessagePack\TypeTransformer\BinaryTransformer;
 
 
 define("MODULE_COMMMAND_FLAG",         0xFFFF0001);
@@ -35,7 +37,7 @@ define("MODULE_ACTUATOR_DN20_1_3", 0xFFFF2003);
 error_reporting(E_ALL);
 
 /* Allow the script to hang around waiting for connections. */
-set_time_limit(0);
+//set_time_limit(0);
 
 /* Turn on implicit output flushing so we see what we're getting
  * as it comes in. */
@@ -43,7 +45,6 @@ ob_implicit_flush();
 
 $address = '192.168.1.15';
 $port = 80;
-
 
 /* Create a TCP/IP socket. */
 $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
@@ -84,44 +85,58 @@ if ($result === false) {
 ];*/
 
 $packer = new Packer(PackOptions::FORCE_BIN | PackOptions::DETECT_ARR_MAP);
+$packer->registerTransformer(new BinaryTransformer());
 
-
-$msg_packed = $packer->packMap(
-  [
-    MODULE_COMMMAND_FLAG => MODULE_COMMMAND_SET_ACTUATOR,
-    MODULE_COMMMAND_ARGS_FLAG => $packer->packMap(
-      [
-          MODULE_ACTUATOR_DN20_1_1 => $packer->packMap(
-            [
-              MODULE_COMMMAND_SET_ARGS1 => true,
-              MODULE_COMMMAND_SET_ARGS2 => 6500,
-            ]
-          ),
-          MODULE_ACTUATOR_DN20_1_2 => $packer->packMap(
-            [
-              MODULE_COMMMAND_SET_ARGS1 => false,
-              MODULE_COMMMAND_SET_ARGS2 => "\xc0", // Nil value on MessagePack
-            ]
-          ),
-          MODULE_ACTUATOR_DN20_1_3 => $packer->packMap(
-            [
-              MODULE_COMMMAND_SET_ARGS1 => true,
-              MODULE_COMMMAND_SET_ARGS2 => 3200,
-            ]
-          ),
-      ]
-      )
-  ]
+$payload = $packer->pack([
+      MODULE_COMMMAND_FLAG => new Binary(MODULE_COMMMAND_SET_ACTUATOR),
+      MODULE_ACTUATOR_DN20_1_1 => $packer->packMap([
+        MODULE_COMMMAND_SET_ARGS1 => true,
+        MODULE_COMMMAND_SET_ARGS2 => 5788633
+      ]),
+    ]
 );
 
-$msg_packed2 = $packer->packMap(
+/*
+$payload = $packer->packExt(MODULE_COMMMAND_FLAG, MODULE_COMMMAND_SET_ACTUATOR);
+$argspayload = $packer->packMap(
+  array(
+    MODULE_ACTUATOR_DN20_1_1 =>  array(
+        MODULE_COMMMAND_SET_ARGS1 => true,
+        MODULE_COMMMAND_SET_ARGS2 => 5788633
+    )
+  )
+);
+$payload .= $argspayload;
+
+
+$payload .= $packer->packExt(MODULE_COMMMAND_ARGS_FLAG, $argspayload);
+$argspayload = $packer->packMap(
+  array(
+    MODULE_ACTUATOR_DN20_1_2 =>  array(
+        MODULE_COMMMAND_SET_ARGS1 => false,
+        MODULE_COMMMAND_SET_ARGS2 => "\xc0"
+    )
+  )
+);
+$payload .= $argspayload;
+
+$payload = $packer->packExt(MODULE_COMMMAND_FLAG, MODULE_COMMMAND_SET_ACTUATOR);
+$argspayload = $packer->packMap(
+  array(
+    MODULE_ACTUATOR_DN20_1_3 =>  array(
+        MODULE_COMMMAND_SET_ARGS1 => true,
+        MODULE_COMMMAND_SET_ARGS2 => 3200000
+    )
+  )
+);
+$payload .= $argspayload;
+*/
+
+//working
+/*$msg_packed2 = $packer->packMap(
   [
-    MODULE_COMMMAND_FLAG => MODULE_COMMMAND_SET_ACTUATOR,
-    MODULE_COMMMAND_ARGS_FLAG => array(
-          MODULE_ACTUATOR_DN20_1_1 =>  array(
-              MODULE_COMMMAND_SET_ARGS1 => true,
-              MODULE_COMMMAND_SET_ARGS2 => 5788633
-          ),
+
+    MODULE_COMMMAND_ARGS_FLAG =>
           MODULE_ACTUATOR_DN20_1_2 => array(
             MODULE_COMMMAND_SET_ARGS1 => false,
             MODULE_COMMMAND_SET_ARGS2 => "\xc0", // Nil value on MessagePack
@@ -133,26 +148,29 @@ $msg_packed2 = $packer->packMap(
     )
   ]
 );
-
+*/
 
 
 
 
 
 //echo $msg_packed."\n";
-$packed2 = "\x02".$msg_packed2."\x03";
-$packed = "\x02".$packer->pack($msg_packed)."\x03";
-//$packed3 = "\x02".$packer->pack($msg)."\x03";
+//$packed2 = "\x02".$msg_packed2."\x03";
+//$array2 = unpack("H*", $packed2);
 
-$bytes = "";
-//$array = str_split($packed);
-$array = unpack("H*", $packed);
-$array2 = unpack("H*", $packed2);
+$packed2 = "\x02".$payload."\x03";
+$array2 = unpack("H*", $payload);
+$array3 = unpack("C*", $payload);
 
-echo "streln(pack): ".strlen($packed)."\n";
-echo "array split count(pack): ".sizeof($array)."\n";
-print_r($array);
+echo "streln(pack): ".strlen($payload)."\n";
+echo "array split count(pack): ".sizeof($array2)."\n";
 print_r($array2);
+print_r($array3);
+echo "\n";
+echo $payload;
+
+echo "\n";
+echo "\n";
 $foo = NULL;
 //foreach($array2 as $byte){
 //    $foo = unpack("H", $array2[0])."\n";
@@ -162,7 +180,7 @@ $foo = NULL;
 
 echo "Sending HTTP HEAD request...";
 //socket_write($socket, $msg, strlen($msg)); //json
-socket_write($socket, $packed, strlen($packed)); //msgpag
+socket_write($socket, $packed2, strlen($packed2)); //msgpag
 
 echo "Reading response:\n\n";
 while ($out = socket_read($socket, 2048)) {

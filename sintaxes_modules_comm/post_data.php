@@ -93,6 +93,30 @@ $payload = $packer->pack([
         MODULE_COMMMAND_SET_ARGS1 => true,
         MODULE_COMMMAND_SET_ARGS2 => 5788633
       ]),
+      MODULE_ACTUATOR_DN20_1_1 => $packer->packMap([
+        MODULE_COMMMAND_SET_ARGS1 => true,
+        MODULE_COMMMAND_SET_ARGS2 => 5788633
+      ]),
+      MODULE_ACTUATOR_DN20_1_2 => $packer->packMap([
+        MODULE_COMMMAND_SET_ARGS1 => true,
+        MODULE_COMMMAND_SET_ARGS2 => 5788633
+      ]),
+      MODULE_ACTUATOR_DN20_1_3 => $packer->packMap([
+        MODULE_COMMMAND_SET_ARGS1 => true,
+        MODULE_COMMMAND_SET_ARGS2 => 5788633
+      ]),
+      MODULE_ACTUATOR_DN20_1_4 => $packer->packMap([
+        MODULE_COMMMAND_SET_ARGS1 => true,
+        MODULE_COMMMAND_SET_ARGS2 => 5788633
+      ]),
+      MODULE_ACTUATOR_DN20_1_5 => $packer->packMap([
+        MODULE_COMMMAND_SET_ARGS1 => true,
+        MODULE_COMMMAND_SET_ARGS2 => 5788633
+      ]),
+      MODULE_ACTUATOR_DN20_1_6 => $packer->packMap([
+        MODULE_COMMMAND_SET_ARGS1 => true,
+        MODULE_COMMMAND_SET_ARGS2 => 5788633
+      ]),
     ]
 );
 
@@ -162,6 +186,18 @@ $packed2 = "\x02".$payload."\x03";
 $array2 = unpack("H*", $payload);
 $array3 = unpack("C*", $payload);
 
+
+$foo = NULL;
+//foreach($array2 as $byte){
+//    $foo = unpack("H", $array2[0])."\n";
+//    echo $foo;
+//}
+//print_r($packed);
+
+
+
+
+
 echo "streln(pack): ".strlen($payload)."\n";
 echo "array split count(pack): ".sizeof($array2)."\n";
 print_r($array2);
@@ -171,12 +207,7 @@ echo $payload;
 
 echo "\n";
 echo "\n";
-$foo = NULL;
-//foreach($array2 as $byte){
-//    $foo = unpack("H", $array2[0])."\n";
-//    echo $foo;
-//}
-//print_r($packed);
+
 
 echo "Sending HTTP HEAD request...";
 //socket_write($socket, $msg, strlen($msg)); //json

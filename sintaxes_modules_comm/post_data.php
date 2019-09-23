@@ -88,16 +88,12 @@ $packer = new Packer(PackOptions::FORCE_BIN | PackOptions::DETECT_ARR_MAP);
 $packer->registerTransformer(new BinaryTransformer());
 
 $payload = $packer->pack([
-      MODULE_COMMMAND_FLAG => new Binary(MODULE_COMMMAND_SET_ACTUATOR),
-      MODULE_ACTUATOR_DN20_1_1 => $packer->packMap([
+      MODULE_COMMMAND_FLAG => MODULE_COMMMAND_SET_ACTUATOR,
+      MODULE_ACTUATOR_DN20_1_1 => array([
         MODULE_COMMMAND_SET_ARGS1 => true,
         MODULE_COMMMAND_SET_ARGS2 => 5788633
       ]),
-      MODULE_ACTUATOR_DN20_1_1 => $packer->packMap([
-        MODULE_COMMMAND_SET_ARGS1 => true,
-        MODULE_COMMMAND_SET_ARGS2 => 5788633
-      ]),
-      MODULE_ACTUATOR_DN20_1_2 => $packer->packMap([
+      /*MODULE_ACTUATOR_DN20_1_2 => $packer->packMap([
         MODULE_COMMMAND_SET_ARGS1 => true,
         MODULE_COMMMAND_SET_ARGS2 => 5788633
       ]),
@@ -116,7 +112,7 @@ $payload = $packer->pack([
       MODULE_ACTUATOR_DN20_1_6 => $packer->packMap([
         MODULE_COMMMAND_SET_ARGS1 => true,
         MODULE_COMMMAND_SET_ARGS2 => 5788633
-      ]),
+      ]),*/
     ]
 );
 
@@ -182,9 +178,10 @@ $payload .= $argspayload;
 //$packed2 = "\x02".$msg_packed2."\x03";
 //$array2 = unpack("H*", $packed2);
 
-$packed2 = "\x02".$payload."\x03";
-$array2 = unpack("H*", $payload);
-$array3 = unpack("C*", $payload);
+//$packed2 = "\x02".$payload."\x03";
+$packed2 = $payload;
+$array2 = unpack("H*", $packed2);
+$array3 = unpack("C*", $packed2);
 
 
 $foo = NULL;
@@ -198,7 +195,7 @@ $foo = NULL;
 
 
 
-echo "streln(pack): ".strlen($payload)."\n";
+echo "streln(pack): ".strlen($packed2)."\n";
 echo "array split count(pack): ".sizeof($array2)."\n";
 print_r($array2);
 print_r($array3);

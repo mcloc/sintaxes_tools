@@ -89,33 +89,32 @@ $packer->registerTransformer(new BinaryTransformer());
 
 $payload = $packer->pack([
       MODULE_COMMMAND_FLAG => MODULE_COMMMAND_SET_ACTUATOR,
-      MODULE_ACTUATOR_DN20_1_1 => array([
+      MODULE_ACTUATOR_DN20_1_1 => array(
         MODULE_COMMMAND_SET_ARGS1 => true,
         MODULE_COMMMAND_SET_ARGS2 => 5788633
-      ]),
-      /*MODULE_ACTUATOR_DN20_1_2 => $packer->packMap([
-        MODULE_COMMMAND_SET_ARGS1 => true,
-        MODULE_COMMMAND_SET_ARGS2 => 5788633
-      ]),
-      MODULE_ACTUATOR_DN20_1_3 => $packer->packMap([
-        MODULE_COMMMAND_SET_ARGS1 => true,
-        MODULE_COMMMAND_SET_ARGS2 => 5788633
-      ]),
-      MODULE_ACTUATOR_DN20_1_4 => $packer->packMap([
-        MODULE_COMMMAND_SET_ARGS1 => true,
-        MODULE_COMMMAND_SET_ARGS2 => 5788633
-      ]),
-      MODULE_ACTUATOR_DN20_1_5 => $packer->packMap([
-        MODULE_COMMMAND_SET_ARGS1 => true,
-        MODULE_COMMMAND_SET_ARGS2 => 5788633
-      ]),
-      MODULE_ACTUATOR_DN20_1_6 => $packer->packMap([
-        MODULE_COMMMAND_SET_ARGS1 => true,
-        MODULE_COMMMAND_SET_ARGS2 => 5788633
-      ]),*/
+      )
     ]
 );
-
+/*MODULE_ACTUATOR_DN20_1_2 => $packer->packMap([
+  MODULE_COMMMAND_SET_ARGS1 => true,
+  MODULE_COMMMAND_SET_ARGS2 => 5788633
+]),
+MODULE_ACTUATOR_DN20_1_3 => $packer->packMap([
+  MODULE_COMMMAND_SET_ARGS1 => true,
+  MODULE_COMMMAND_SET_ARGS2 => 5788633
+]),
+MODULE_ACTUATOR_DN20_1_4 => $packer->packMap([
+  MODULE_COMMMAND_SET_ARGS1 => true,
+  MODULE_COMMMAND_SET_ARGS2 => 5788633
+]),
+MODULE_ACTUATOR_DN20_1_5 => $packer->packMap([
+  MODULE_COMMMAND_SET_ARGS1 => true,
+  MODULE_COMMMAND_SET_ARGS2 => 5788633
+]),
+MODULE_ACTUATOR_DN20_1_6 => $packer->packMap([
+  MODULE_COMMMAND_SET_ARGS1 => true,
+  MODULE_COMMMAND_SET_ARGS2 => 5788633
+]),*/
 /*
 $payload = $packer->packExt(MODULE_COMMMAND_FLAG, MODULE_COMMMAND_SET_ACTUATOR);
 $argspayload = $packer->packMap(
@@ -208,7 +207,7 @@ echo "\n";
 
 echo "Sending HTTP HEAD request...";
 //socket_write($socket, $msg, strlen($msg)); //json
-socket_write($socket, $packed2, strlen($packed2)); //msgpag
+socket_write($socket, $payload, strlen($payload)); //msgpag
 
 echo "Reading response:\n\n";
 while ($out = socket_read($socket, 2048)) {

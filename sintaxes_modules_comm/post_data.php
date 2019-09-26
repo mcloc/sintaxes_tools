@@ -7,12 +7,13 @@ use MessagePack\Type\Binary;
 use MessagePack\TypeTransformer\BinaryTransformer;
 
 
-define("MODULE_COMMMAND_FLAG",         0xFFFF0001);
-define("MODULE_COMMMAND_ARGS_FLAG",    0xFFFF0002);
-define("MODULE_COMMMAND_EXECUTE_FLAG", 0x13);
-define("MODULE_COMMMAND_GET_STATE",    0xFFFF0010);
-define("MODULE_COMMMAND_GET_DATA",     0xFFFF0011);
-define("MODULE_COMMMAND_SET_ACTUATOR", 0xFFFF0012);
+define("MODULE_COMMMAND_FLAG",            0xFFFF0001);
+define("MODULE_COMMMAND_ARGS_FLAG",       0xFFFF0002);
+define("MODULE_COMMMAND_EXECUTE_FLAG",    0xFFFF0013);
+define("MODULE_COMMMAND_GET_STATE",       0xFFFF0020);
+define("MODULE_COMMMAND_GET_DATA",        0xFFFF0021);
+define("MODULE_COMMAND_GET_PROCESS_FLOW", 0xFFFF0022);
+define("MODULE_COMMMAND_SET_ACTUATOR",    0xFFFF0801);
 
 define("MODULE_COMMMAND_SET_ARGS1", 0xFFFFF001);
 define("MODULE_COMMMAND_SET_ARGS2", 0xFFFFF002);
@@ -85,17 +86,34 @@ if ($result === false) {
 ];*/
 
 $packer = new Packer(PackOptions::FORCE_BIN | PackOptions::DETECT_ARR_MAP);
-$packer->registerTransformer(new BinaryTransformer());
+//$packer->registerTransformer(new BinaryTransformer());
 
-$payload = $packer->pack([
+/*$payload = $packer->pack([
       MODULE_COMMMAND_FLAG => MODULE_COMMMAND_SET_ACTUATOR,
       MODULE_ACTUATOR_DN20_1_1 => array(
         MODULE_COMMMAND_SET_ARGS1 => true,
         MODULE_COMMMAND_SET_ARGS2 => 5788633
       )
     ]
+);*/
+
+
+$payload = $packer->pack([
+      MODULE_COMMMAND_FLAG => MODULE_COMMMAND_GET_DATA,
+      MODULE_COMMMAND_EXECUTE_FLAG => true
+    ]
 );
-/*MODULE_ACTUATOR_DN20_1_2 => $packer->packMap([
+
+/*
+
+MODULE_ACTUATOR_DN20_1_2 => array(
+  MODULE_COMMMAND_SET_ARGS3 => false,
+  MODULE_COMMMAND_SET_ARGS4 => 156789
+)
+
+
+
+MODULE_ACTUATOR_DN20_1_2 => $packer->packMap([
   MODULE_COMMMAND_SET_ARGS1 => true,
   MODULE_COMMMAND_SET_ARGS2 => 5788633
 ]),
@@ -179,8 +197,8 @@ $payload .= $argspayload;
 
 //$packed2 = "\x02".$payload."\x03";
 $packed2 = $payload;
-$array2 = unpack("H*", $packed2);
-$array3 = unpack("C*", $packed2);
+$array2 = unpack("H*", $payload);
+$array3 = unpack("C*", $payload);
 
 
 $foo = NULL;
@@ -206,7 +224,6 @@ echo "\n";
 
 
 echo "Sending HTTP HEAD request...";
-//socket_write($socket, $msg, strlen($msg)); //json
 socket_write($socket, $payload, strlen($payload)); //msgpag
 
 echo "Reading response:\n\n";
@@ -215,6 +232,6 @@ while ($out = socket_read($socket, 2048)) {
 }
 
 echo "\nClosing socket...\n";
-socket_close($socket);
+//socket_close($socket);
 
 ?>

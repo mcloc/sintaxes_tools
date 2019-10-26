@@ -44,7 +44,7 @@ error_reporting(E_ALL);
  * as it comes in. */
 ob_implicit_flush();
 
-$address = '192.168.1.15';
+$address = '192.168.1.16';
 $port = 80;
 
 /* Create a TCP/IP socket. */
@@ -87,25 +87,45 @@ if ($result === false) {
 
 $packer = new Packer(PackOptions::FORCE_BIN | PackOptions::DETECT_ARR_MAP);
 //$packer->registerTransformer(new BinaryTransformer());
+///*
 
-/*$payload = $packer->pack([
+if($argv[1] == 1)
+  $value = true;
+if($argv[1] == 0)
+  $value = false;
+
+if(is_null($value))
+  $value = false;
+
+
+$payload = $packer->pack([
       MODULE_COMMMAND_FLAG => MODULE_COMMMAND_SET_ACTUATOR,
       MODULE_ACTUATOR_DN20_1_1 => array(
-        MODULE_COMMMAND_SET_ARGS1 => true,
-        MODULE_COMMMAND_SET_ARGS2 => 5788633
-      )
+        MODULE_COMMMAND_SET_ARGS1 => $value,
+        MODULE_COMMMAND_SET_ARGS2 => 5788633//static void ApplianceMemmoryHandler::allocSetActuatorCommand(uint8_t device_key) {
+//	ApplianceMemmoryHandler::command_set_actuator = new SetActuatorCommand(device_key);
+//}
+      ),
+      MODULE_COMMMAND_EXECUTE_FLAG => true
     ]
-);*/
-
-
+);
+//*/
+/*
 $payload = $packer->pack([
       MODULE_COMMMAND_FLAG => MODULE_COMMMAND_GET_DATA,
       MODULE_COMMMAND_EXECUTE_FLAG => true
     ]
-);
+);*/
 
 /*
-
+MODULE_ACTUATOR_DN20_1_2 => array(
+  MODULE_COMMMAND_SET_ARGS1 => false,
+  MODULE_COMMMAND_SET_ARGS2 => 788633
+),
+MODULE_ACTUATOR_DN20_1_3 => array(
+  MODULE_COMMMAND_SET_ARGS1 => true,
+  MODULE_COMMMAND_SET_ARGS2 => 788633
+),
 MODULE_ACTUATOR_DN20_1_2 => array(
   MODULE_COMMMAND_SET_ARGS3 => false,
   MODULE_COMMMAND_SET_ARGS4 => 156789
@@ -218,6 +238,8 @@ print_r($array2);
 print_r($array3);
 echo "\n";
 echo $payload;
+
+//file_put_contents('/home/mcloc/msgpack4bcp.msgpack', $payload);
 
 echo "\n";
 echo "\n";

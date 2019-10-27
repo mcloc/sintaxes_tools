@@ -53,22 +53,22 @@ $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 if ($socket === false) {
     echo "socket_create() failed: reason: " . socket_strerror(socket_last_error()) . "\n";
 } else {
-    echo "OK.\n";
+    #echo "OK.\n";
 }
 
 
 socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => 5, 'usec' => 0));
 socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, array('sec' => 5, 'usec' => 0));
 
-echo "Attempting to connect to '$address' on port '$port'...";
-if(! is_null($argv[2]))
+echo date('Ymj H:i:s')." --- '$address': ";
+if(isset($argv[2]))
   echo "Total requests so far: ".$argv[2]."\n";
 
 $result = socket_connect($socket, $address, $port);
 if ($result === false) {
     echo "socket_connect() failed.\nReason: ($result) " . socket_strerror(socket_last_error($socket)) . "\n";
 } else {
-    echo "OK.\n";
+    #echo "OK.\n";
 }
 
 
@@ -93,13 +93,20 @@ $packer = new Packer(PackOptions::FORCE_BIN | PackOptions::DETECT_ARR_MAP);
 //$packer->registerTransformer(new BinaryTransformer());
 ///*
 
-if($argv[1] == 1)
+$value = null;
+
+if(isset($argv[1]) && $argv[1] == 1)
   $value = true;
-if($argv[1] == 0)
+if(isset($argv[1]) && $argv[1] == 0)
   $value = false;
 
-if(is_null($value))
-  $value = false;
+if(is_null($value)) {
+  $value = rand(1,50);
+  if($value % 2 == 0)
+    $value = true;
+  else
+    $value = false;
+}
 
 
 $payload = $packer->pack([
@@ -122,6 +129,16 @@ $payload = $packer->pack([
 );*/
 
 /*
+MODULE_ACTUATOR_DN20_1_2 => array(
+  MODULE_COMMMAND_SET_ARGS1 => !$value,
+  MODULE_COMMMAND_SET_ARGS2 => 788633
+),
+MODULE_ACTUATOR_DN20_1_3 => array(
+  MODULE_COMMMAND_SET_ARGS1 => $value,
+  MODULE_COMMMAND_SET_ARGS2 => 788633
+),
+
+
 MODULE_ACTUATOR_DN20_1_4 => array(
   MODULE_COMMMAND_SET_ARGS1 => !$value,
   MODULE_COMMMAND_SET_ARGS2 => 788633
@@ -250,28 +267,28 @@ $foo = NULL;
 
 
 
-echo "streln(pack): ".strlen($packed2)."\n";
-echo "array split count(pack): ".sizeof($array2)."\n";
-print_r($array2);
+#echo "streln(pack): ".strlen($packed2)."\n";
+#echo "array split count(pack): ".sizeof($array2)."\n";
+#print_r($array2);
 #print_r($array3);
-echo "\n";
-echo $payload;
-
+#echo "\n";
+#echo $payload;
+#echo "value: ".$value;
 //file_put_contents('/home/mcloc/msgpack4bcp.msgpack', $payload);
 
-echo "\n";
-echo "\n";
+#echo "\n";
+#echo "\n";
 
 
-echo "Sending HTTP HEAD request...";
+#echo "Sending HTTP HEAD request...";
 socket_write($socket, $payload, strlen($payload)); //msgpag
 
-echo "Reading response:\n\n";
+#echo "Reading response:\n\n";
 while ($out = socket_read($socket, 2048)) {
-    echo $out;
+    echo $out."\n";
 }
 
-echo "\nClosing socket...\n";
-//socket_close($socket);
+#echo "\nClosing socket...\n";
+socket_close($socket);
 
 ?>

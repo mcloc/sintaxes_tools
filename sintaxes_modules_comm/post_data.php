@@ -32,6 +32,7 @@ define("MODULE_SENSOR_DTH21_1_3", 0xFFFF1003);
 define("MODULE_ACTUATOR_DN20_1_1", 0xFFFF2001);
 define("MODULE_ACTUATOR_DN20_1_2", 0xFFFF2002);
 define("MODULE_ACTUATOR_DN20_1_3", 0xFFFF2003);
+define("MODULE_ACTUATOR_DN20_1_4", 0xFFFF2004);
 
 
 
@@ -60,6 +61,9 @@ socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => 5, 'usec' => 
 socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, array('sec' => 5, 'usec' => 0));
 
 echo "Attempting to connect to '$address' on port '$port'...";
+if(! is_null($argv[2]))
+  echo "Total requests so far: ".$argv[2]."\n";
+
 $result = socket_connect($socket, $address, $port);
 if ($result === false) {
     echo "socket_connect() failed.\nReason: ($result) " . socket_strerror(socket_last_error($socket)) . "\n";
@@ -118,6 +122,20 @@ $payload = $packer->pack([
 );*/
 
 /*
+MODULE_ACTUATOR_DN20_1_4 => array(
+  MODULE_COMMMAND_SET_ARGS1 => !$value,
+  MODULE_COMMMAND_SET_ARGS2 => 788633
+),
+,
+MODULE_ACTUATOR_DN20_1_2 => array(
+  MODULE_COMMMAND_SET_ARGS1 => false,
+  MODULE_COMMMAND_SET_ARGS2 => 788633
+),
+MODULE_ACTUATOR_DN20_1_3 => array(
+  MODULE_COMMMAND_SET_ARGS1 => $value,
+  MODULE_COMMMAND_SET_ARGS2 => 788633
+)
+
 MODULE_ACTUATOR_DN20_1_2 => array(
   MODULE_COMMMAND_SET_ARGS1 => false,
   MODULE_COMMMAND_SET_ARGS2 => 788633
@@ -218,7 +236,7 @@ $payload .= $argspayload;
 //$packed2 = "\x02".$payload."\x03";
 $packed2 = $payload;
 $array2 = unpack("H*", $payload);
-$array3 = unpack("C*", $payload);
+#$array3 = unpack("C*", $payload);
 
 
 $foo = NULL;
@@ -235,7 +253,7 @@ $foo = NULL;
 echo "streln(pack): ".strlen($packed2)."\n";
 echo "array split count(pack): ".sizeof($array2)."\n";
 print_r($array2);
-print_r($array3);
+#print_r($array3);
 echo "\n";
 echo $payload;
 

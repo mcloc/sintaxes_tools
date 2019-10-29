@@ -112,7 +112,19 @@ if(is_null($value)) {
 
 
 $payload = $packer->pack([
-      MODULE_COMMMAND_FLAG => MODULE_COMMMAND_GET_DATA,
+      MODULE_COMMMAND_FLAG => MODULE_COMMMAND_SET_ACTUATOR,
+      MODULE_ACTUATOR_DN20_1_1 => array(
+        MODULE_COMMMAND_SET_ARGS1 => $value,
+        MODULE_COMMMAND_SET_ARGS2 => 5788633
+      ),
+      MODULE_ACTUATOR_DN20_1_2 => array(
+        MODULE_COMMMAND_SET_ARGS1 => !$value,
+        MODULE_COMMMAND_SET_ARGS2 => 788633
+      ),
+      MODULE_ACTUATOR_DN20_1_3 => array(
+        MODULE_COMMMAND_SET_ARGS1 => $value,
+        MODULE_COMMMAND_SET_ARGS2 => 788633
+      ),
       MODULE_COMMMAND_EXECUTE_FLAG => true
     ]
 );
@@ -125,22 +137,6 @@ $payload = $packer->pack([
 );*/
 
 /*
-
-MODULE_ACTUATOR_DN20_1_1 => array(
-  MODULE_COMMMAND_SET_ARGS1 => $value,
-  MODULE_COMMMAND_SET_ARGS2 => 5788633//static void ApplianceMemmoryHandler::allocSetActuatorCommand(uint8_t device_key) {
-//	ApplianceMemmoryHandler::command_set_actuator = new SetActuatorCommand(device_key);
-//}
-),
-MODULE_ACTUATOR_DN20_1_2 => array(
-  MODULE_COMMMAND_SET_ARGS1 => $value,
-  MODULE_COMMMAND_SET_ARGS2 => 788633
-),
-MODULE_ACTUATOR_DN20_1_3 => array(
-  MODULE_COMMMAND_SET_ARGS1 => $value,
-  MODULE_COMMMAND_SET_ARGS2 => 788633
-),
-
 MODULE_ACTUATOR_DN20_1_2 => array(
   MODULE_COMMMAND_SET_ARGS1 => !$value,
   MODULE_COMMMAND_SET_ARGS2 => 788633
@@ -273,7 +269,7 @@ $foo = NULL;
 //    $foo = unpack("H", $array2[0])."\n";
 //    echo $foo;
 //}
-//print_r($packed);
+#print_r($packed2);
 
 
 

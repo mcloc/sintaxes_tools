@@ -118,7 +118,7 @@ $payload = $packer->pack([
         MODULE_COMMMAND_SET_ARGS2 => 5788633
       ),
       MODULE_ACTUATOR_DN20_1_2 => array(
-        MODULE_COMMMAND_SET_ARGS1 => !$value,
+        MODULE_COMMMAND_SET_ARGS1 => $value,
         MODULE_COMMMAND_SET_ARGS2 => 788633
       ),
       MODULE_ACTUATOR_DN20_1_3 => array(

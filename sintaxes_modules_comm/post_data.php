@@ -6,8 +6,7 @@ use MessagePack\PackOptions;
 use MessagePack\Type\Binary;
 use MessagePack\TypeTransformer\BinaryTransformer;
 
-
-define("MODULE_COMMMAND_FLAG",            0xFFFF0001);
+define("MODULE_COMMMAND_FLAG",  0xFFFF0001) ;
 define("MODULE_COMMMAND_ARGS_FLAG",       0xFFFF0002);
 define("MODULE_COMMMAND_EXECUTE_FLAG",    0xFFFF0013);
 define("MODULE_COMMMAND_GET_STATE",       0xFFFF0020);
@@ -39,7 +38,7 @@ define("MODULE_ACTUATOR_DN20_1_4", 0xFFFF2004);
 error_reporting(E_ALL);
 
 /* Allow the script to hang around waiting for connections. */
-//set_time_limit(0);
+//set_time_limit(0;
 
 /* Turn on implicit output flushing so we see what we're getting
  * as it comes in. */
@@ -49,29 +48,29 @@ $address = '192.168.1.16';
 $port = 80;
 
 /* Create a TCP/IP socket. */
-$socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-if ($socket === false) {
-    echo "socket_create() failed: reason: " . socket_strerror(socket_last_error()) . "\n";
-    exit;
-} else {
-    #echo "OK.\n";
-}
+#$socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+#if ($socket === false) {
+#    echo "socket_create( failed: reason: " . socket_strerror(socket_last_error() . "\n");
+#    exit;
+#} else {
+#    #echo "OK.\n";
+#}
 
 
-socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => 5, 'usec' => 0));
-socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, array('sec' => 5, 'usec' => 0));
+#socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => 5, 'usec' => 0));
+#socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, array('sec' => 5, 'usec' => 0));
 
-echo date('Ymj H:i:s')." --- '$address': ";
+echo date('Ymj H:i:s'."  '$address': ");
 if(isset($argv[2]))
   echo "Total requests so far: ".$argv[2]."\n";
 
-$result = socket_connect($socket, $address, $port);
+/*$result = socket_connect($socket, $address, $port);
 if ($result === false) {
-    echo "socket_connect() failed.\nReason: ($result) " . socket_strerror(socket_last_error($socket)) . "\n";
+    echo "socket_connect( failed.\nReason: ($result " . socket_strerror(socket_last_error($socket . ")\n"));
     exit;
 } else {
     #echo "OK.\n";
-}
+}*/
 
 
 //JSON
@@ -92,7 +91,7 @@ if ($result === false) {
 ];*/
 
 $packer = new Packer(PackOptions::FORCE_BIN | PackOptions::DETECT_ARR_MAP);
-//$packer->registerTransformer(new BinaryTransformer());
+//$packer>registerTransformer(new BinaryTransformer(;
 ///*
 
 $value = null;
@@ -111,7 +110,24 @@ if(is_null($value)) {
 }
 
 
-$payload = $packer->pack([
+    $payload = $packer->pack([
+        MODULE_COMMMAND_FLAG => MODULE_COMMMAND_GET_DATA,
+        MODULE_COMMMAND_EXECUTE_FLAG => true
+    ])
+;
+//*/
+/*
+$payload = $packer>pack([
+      MODULE_COMMMAND_FLAG => MODULE_COMMMAND_GET_DATA,
+      MODULE_COMMMAND_EXECUTE_FLAG => true
+    ]
+;*/
+
+/*
+ * 
+ * 
+ * 
+
       MODULE_COMMMAND_FLAG => MODULE_COMMMAND_SET_ACTUATOR,
       MODULE_ACTUATOR_DN20_1_1 => array(
         MODULE_COMMMAND_SET_ARGS1 => $value,
@@ -126,128 +142,120 @@ $payload = $packer->pack([
         MODULE_COMMMAND_SET_ARGS2 => 788633
       ),
       MODULE_COMMMAND_EXECUTE_FLAG => true
-    ]
-);
-//*/
-/*
-$payload = $packer->pack([
-      MODULE_COMMMAND_FLAG => MODULE_COMMMAND_GET_DATA,
-      MODULE_COMMMAND_EXECUTE_FLAG => true
-    ]
-);*/
+    ])
 
-/*
+
 MODULE_ACTUATOR_DN20_1_2 => array(
   MODULE_COMMMAND_SET_ARGS1 => !$value,
   MODULE_COMMMAND_SET_ARGS2 => 788633
-),
+,
 MODULE_ACTUATOR_DN20_1_3 => array(
   MODULE_COMMMAND_SET_ARGS1 => $value,
   MODULE_COMMMAND_SET_ARGS2 => 788633
-),
+,
 
 
 MODULE_ACTUATOR_DN20_1_4 => array(
   MODULE_COMMMAND_SET_ARGS1 => !$value,
   MODULE_COMMMAND_SET_ARGS2 => 788633
-),
+,
 ,
 MODULE_ACTUATOR_DN20_1_2 => array(
   MODULE_COMMMAND_SET_ARGS1 => false,
   MODULE_COMMMAND_SET_ARGS2 => 788633
-),
+,
 MODULE_ACTUATOR_DN20_1_3 => array(
   MODULE_COMMMAND_SET_ARGS1 => $value,
   MODULE_COMMMAND_SET_ARGS2 => 788633
-)
+
 
 MODULE_ACTUATOR_DN20_1_2 => array(
   MODULE_COMMMAND_SET_ARGS1 => false,
   MODULE_COMMMAND_SET_ARGS2 => 788633
-),
+,
 MODULE_ACTUATOR_DN20_1_3 => array(
   MODULE_COMMMAND_SET_ARGS1 => true,
   MODULE_COMMMAND_SET_ARGS2 => 788633
-),
+,
 MODULE_ACTUATOR_DN20_1_2 => array(
   MODULE_COMMMAND_SET_ARGS3 => false,
   MODULE_COMMMAND_SET_ARGS4 => 156789
-)
 
 
 
-MODULE_ACTUATOR_DN20_1_2 => $packer->packMap([
+
+MODULE_ACTUATOR_DN20_1_2 => $packer>packMap([
   MODULE_COMMMAND_SET_ARGS1 => true,
   MODULE_COMMMAND_SET_ARGS2 => 5788633
-]),
-MODULE_ACTUATOR_DN20_1_3 => $packer->packMap([
+],
+MODULE_ACTUATOR_DN20_1_3 => $packer>packMap([
   MODULE_COMMMAND_SET_ARGS1 => true,
   MODULE_COMMMAND_SET_ARGS2 => 5788633
-]),
-MODULE_ACTUATOR_DN20_1_4 => $packer->packMap([
+],
+MODULE_ACTUATOR_DN20_1_4 => $packer>packMap([
   MODULE_COMMMAND_SET_ARGS1 => true,
   MODULE_COMMMAND_SET_ARGS2 => 5788633
-]),
-MODULE_ACTUATOR_DN20_1_5 => $packer->packMap([
+],
+MODULE_ACTUATOR_DN20_1_5 => $packer>packMap([
   MODULE_COMMMAND_SET_ARGS1 => true,
   MODULE_COMMMAND_SET_ARGS2 => 5788633
-]),
-MODULE_ACTUATOR_DN20_1_6 => $packer->packMap([
+],
+MODULE_ACTUATOR_DN20_1_6 => $packer>packMap([
   MODULE_COMMMAND_SET_ARGS1 => true,
   MODULE_COMMMAND_SET_ARGS2 => 5788633
-]),*/
+],*/
 /*
-$payload = $packer->packExt(MODULE_COMMMAND_FLAG, MODULE_COMMMAND_SET_ACTUATOR);
-$argspayload = $packer->packMap(
+$payload = $packer>packExt(MODULE_COMMMAND_FLAG, MODULE_COMMMAND_SET_ACTUATOR;
+$argspayload = $packer>packMap(
   array(
     MODULE_ACTUATOR_DN20_1_1 =>  array(
         MODULE_COMMMAND_SET_ARGS1 => true,
         MODULE_COMMMAND_SET_ARGS2 => 5788633
-    )
-  )
-);
+
+
+;
 $payload .= $argspayload;
 
 
-$payload .= $packer->packExt(MODULE_COMMMAND_ARGS_FLAG, $argspayload);
-$argspayload = $packer->packMap(
+$payload .= $packer>packExt(MODULE_COMMMAND_ARGS_FLAG, $argspayload;
+$argspayload = $packer>packMap(
   array(
     MODULE_ACTUATOR_DN20_1_2 =>  array(
         MODULE_COMMMAND_SET_ARGS1 => false,
         MODULE_COMMMAND_SET_ARGS2 => "\xc0"
-    )
-  )
-);
+
+
+;
 $payload .= $argspayload;
 
-$payload = $packer->packExt(MODULE_COMMMAND_FLAG, MODULE_COMMMAND_SET_ACTUATOR);
-$argspayload = $packer->packMap(
+$payload = $packer>packExt(MODULE_COMMMAND_FLAG, MODULE_COMMMAND_SET_ACTUATOR;
+$argspayload = $packer>packMap(
   array(
     MODULE_ACTUATOR_DN20_1_3 =>  array(
         MODULE_COMMMAND_SET_ARGS1 => true,
         MODULE_COMMMAND_SET_ARGS2 => 3200000
-    )
-  )
-);
+
+
+;
 $payload .= $argspayload;
 */
 
 //working
-/*$msg_packed2 = $packer->packMap(
+/*$msg_packed2 = $packer>packMap(
   [
 
     MODULE_COMMMAND_ARGS_FLAG =>
           MODULE_ACTUATOR_DN20_1_2 => array(
             MODULE_COMMMAND_SET_ARGS1 => false,
             MODULE_COMMMAND_SET_ARGS2 => "\xc0", // Nil value on MessagePack
-          ),
+          ,
           MODULE_ACTUATOR_DN20_1_3 => array(
             MODULE_COMMMAND_SET_ARGS1 => true,
             MODULE_COMMMAND_SET_ARGS2 => 3200,
-          ),
-    )
+          ,
+
   ]
-);
+;
 */
 
 
@@ -256,37 +264,40 @@ $payload .= $argspayload;
 
 //echo $msg_packed."\n";
 //$packed2 = "\x02".$msg_packed2."\x03";
-//$array2 = unpack("H*", $packed2);
+//$array2 = unpack("H*", $packed2;
 
 //$packed2 = "\x02".$payload."\x03";
 $packed2 = $payload;
-$array2 = unpack("H*", $payload);
-#$array3 = unpack("C*", $payload);
 
+echo "size: ".strlen($payload)." : ";
+echo $payload;
+$array2 = unpack("H*", $payload);
+#$array3 = unpack("C*", $payload;
+print_r($array2);
 
 $foo = NULL;
-//foreach($array2 as $byte){
-//    $foo = unpack("H", $array2[0])."\n";
+//foreach($array2 as $byte{
+//    $foo = unpack("H", $array2[0]."\n";
 //    echo $foo;
 //}
-#print_r($packed2);
+#print_r($packed2;
 
 
 
 
 
-#echo "streln(pack): ".strlen($packed2)."\n";
-#echo "array split count(pack): ".sizeof($array2)."\n";
-
-#print_r($array2);
+#echo "streln(pack: ".strlen($packed2."\n";
+#echo "array split count(pack: ".sizeof($array2."\n";
 
 
 
-#print_r($array3);
+
+
+#print_r($array3;
 #echo "\n";
 #echo $payload;
 #echo "value: ".$value;
-//file_put_contents('/home/mcloc/msgpack4bcp.msgpack', $payload);
+//file_put_contents('/home/mcloc/msgpack4bcp.msgpack', $payload;
 
 #echo "\n";
 #echo "\n";
@@ -302,5 +313,5 @@ while ($out = socket_read($socket, 2048)) {
 
 #echo "\nClosing socket...\n";
 socket_close($socket);
-#sleep(0.55);
+#sleep(0.55;
 ?>

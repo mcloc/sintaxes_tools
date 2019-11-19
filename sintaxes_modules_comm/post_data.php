@@ -48,29 +48,29 @@ $address = '192.168.1.16';
 $port = 80;
 
 /* Create a TCP/IP socket. */
-#$socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-#if ($socket === false) {
-#    echo "socket_create( failed: reason: " . socket_strerror(socket_last_error() . "\n");
-#    exit;
-#} else {
-#    #echo "OK.\n";
-#}
+$socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+if ($socket === false) {
+    echo "socket_create( failed: reason: " . socket_strerror(socket_last_error() . "\n");
+    exit;
+} else {
+    #echo "OK.\n";
+}
 
 
-#socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => 5, 'usec' => 0));
-#socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, array('sec' => 5, 'usec' => 0));
+socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => 5, 'usec' => 0));
+socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, array('sec' => 5, 'usec' => 0));
 
 echo date('Ymj H:i:s'."  '$address': ");
 if(isset($argv[2]))
   echo "Total requests so far: ".$argv[2]."\n";
 
-/*$result = socket_connect($socket, $address, $port);
+$result = socket_connect($socket, $address, $port);
 if ($result === false) {
     echo "socket_connect( failed.\nReason: ($result " . socket_strerror(socket_last_error($socket . ")\n"));
     exit;
 } else {
-    #echo "OK.\n";
-}*/
+    echo "OK.\n";
+}
 
 
 //JSON
@@ -80,7 +80,7 @@ if ($result === false) {
 		"\"argument3\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"".
 		"}".
 	"}\x03";
-#$msg = "\n";
+$msg = "\n";
 */
 
 //Msgpack
@@ -109,12 +109,30 @@ if(is_null($value)) {
     $value = false;
 }
 
+$payload =  $packer->pack([
+     MODULE_COMMMAND_FLAG => MODULE_COMMMAND_SET_ACTUATOR,
+      MODULE_ACTUATOR_DN20_1_1 => array(
+        MODULE_COMMMAND_SET_ARGS1 => $value,
+        MODULE_COMMMAND_SET_ARGS2 => 5788633
+      ),
+      MODULE_ACTUATOR_DN20_1_2 => array(
+        MODULE_COMMMAND_SET_ARGS1 => !$value,
+        MODULE_COMMMAND_SET_ARGS2 => 788633
+      ),
+      MODULE_ACTUATOR_DN20_1_3 => array(
+        MODULE_COMMMAND_SET_ARGS1 => $value,
+        MODULE_COMMMAND_SET_ARGS2 => 788633
+      ),
+      MODULE_COMMMAND_EXECUTE_FLAG => true
+    ]
+);
 
-    $payload = $packer->pack([
-        MODULE_COMMMAND_FLAG => MODULE_COMMMAND_GET_DATA,
-        MODULE_COMMMAND_EXECUTE_FLAG => true
-    ])
-;
+
+#    $payload = $packer->pack([
+#        MODULE_COMMMAND_FLAG => MODULE_COMMMAND_GET_DATA,
+#        MODULE_COMMMAND_EXECUTE_FLAG => true
+#    ])
+#;
 //*/
 /*
 $payload = $packer>pack([
@@ -269,31 +287,31 @@ $payload .= $argspayload;
 //$packed2 = "\x02".$payload."\x03";
 $packed2 = $payload;
 
-echo "size: ".strlen($payload)." : ";
-echo $payload;
+#echo "size: ".strlen($payload)." : ";
+#echo $payload;
 $array2 = unpack("H*", $payload);
-#$array3 = unpack("C*", $payload;
-print_r($array2);
+$array3 = unpack("C*", $payload);
+#print_r($array2);
 
 $foo = NULL;
 //foreach($array2 as $byte{
 //    $foo = unpack("H", $array2[0]."\n";
 //    echo $foo;
 //}
-#print_r($packed2;
+#print_r($packed2);
 
 
 
 
 
-#echo "streln(pack: ".strlen($packed2."\n";
-#echo "array split count(pack: ".sizeof($array2."\n";
+#echo "streln(pack: ".strlen($packed2)."\n";
+#echo "array split count(pack: ".sizeof($array2)."\n";
 
 
 
 
 
-#print_r($array3;
+#print_r($array3);
 #echo "\n";
 #echo $payload;
 #echo "value: ".$value;
@@ -313,5 +331,5 @@ while ($out = socket_read($socket, 2048)) {
 
 #echo "\nClosing socket...\n";
 socket_close($socket);
-#sleep(0.55;
+sleep(0.5);
 ?>

@@ -28,6 +28,10 @@ define("MODULE_COMMMAND_SET_ARGS8", 0xFFFFF008);
 define("MODULE_SENSOR_DTH21_1_1", 0xFFFF1001);
 define("MODULE_SENSOR_DTH21_1_2", 0xFFFF1002);
 define("MODULE_SENSOR_DTH21_1_3", 0xFFFF1003);
+define("MODULE_SENSOR_BME280_1_1", 0xFFFF1005);
+define("MODULE_SENSOR_BME280_1_2", 0xFFFF1006);
+
+
 define("MODULE_ACTUATOR_DN20_1_1", 0xFFFF2001);
 define("MODULE_ACTUATOR_DN20_1_2", 0xFFFF2002);
 define("MODULE_ACTUATOR_DN20_1_3", 0xFFFF2003);
@@ -57,8 +61,8 @@ if ($socket === false) {
 }
 
 
-socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => 5, 'usec' => 0));
-socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, array('sec' => 5, 'usec' => 0));
+socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array('sec' => 7, 'usec' => 0));
+socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, array('sec' => 7, 'usec' => 0));
 
 echo date('Ymj H:i:s'."  '$address': ");
 if(isset($argv[2]))
@@ -110,21 +114,10 @@ if(is_null($value)) {
 }
 
 $payload =  $packer->pack([
-     MODULE_COMMMAND_FLAG => MODULE_COMMMAND_SET_ACTUATOR,
-      MODULE_ACTUATOR_DN20_1_1 => array(
-        MODULE_COMMMAND_SET_ARGS1 => $value,
-        MODULE_COMMMAND_SET_ARGS2 => 5788633
-      ),
-      MODULE_ACTUATOR_DN20_1_2 => array(
-        MODULE_COMMMAND_SET_ARGS1 => !$value,
-        MODULE_COMMMAND_SET_ARGS2 => 788633
-      ),
-      MODULE_ACTUATOR_DN20_1_3 => array(
-        MODULE_COMMMAND_SET_ARGS1 => $value,
-        MODULE_COMMMAND_SET_ARGS2 => 788633
-      ),
+      MODULE_COMMMAND_FLAG => MODULE_COMMMAND_GET_DATA,
       MODULE_COMMMAND_EXECUTE_FLAG => true
     ]
+    
 );
 
 
@@ -291,7 +284,7 @@ $packed2 = $payload;
 #echo $payload;
 $array2 = unpack("H*", $payload);
 $array3 = unpack("C*", $payload);
-#print_r($array2);
+print_r($array2);
 
 $foo = NULL;
 //foreach($array2 as $byte{
@@ -321,15 +314,15 @@ $foo = NULL;
 #echo "\n";
 
 
-#echo "Sending HTTP HEAD request...";
+echo "Sending HTTP HEAD request...";
 socket_write($socket, $payload, strlen($payload)); //msgpag
 
-#echo "Reading response:\n\n";
-while ($out = socket_read($socket, 2048)) {
+echo "Reading response:\n\n";
+while ($out = socket_read($socket, 5096)) {
     echo $out."\n";
 }
 
-#echo "\nClosing socket...\n";
+echo "\nClosing socket...\n";
 socket_close($socket);
 sleep(0.5);
 ?>
